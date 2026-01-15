@@ -1,0 +1,1 @@
+export './mini_app_entity/mini_app_entity.dart';

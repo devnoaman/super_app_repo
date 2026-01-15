@@ -1,0 +1,12 @@
+name: super_app_repo
+
+environment:
+  sdk: '^3.9.0'
+workspace:
+  - packages/super_app_manager
+  # - packages/client_package
+  # - packages/server_package
+
+
+dev_dependencies:
+  melos: ^7.1.1

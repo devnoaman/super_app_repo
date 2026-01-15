@@ -1,0 +1,47 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "super_gudea",
+            "cwd": "apps/super_gudea",
+            "request": "launch",
+            "type": "dart",
+            "args": []
+        },
+        {
+            "name": "camera app",
+            "cwd": "apps/camera_mini_app",
+            "request": "launch",
+            "type": "dart",
+        },
+        {
+            "name": "camera app (Chrome 55414)",
+            "cwd": "apps/camera_mini_app",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--web-port",
+                "55414"
+            ]
+        },
+        {
+            "name": "super_gudea (profile mode)",
+            "cwd": "apps/super_gudea",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "super_gudea (release mode)",
+            "cwd": "apps/super_gudea",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
