@@ -81,7 +81,10 @@ class MiniAppEntityCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => MiniAppHostScreen(miniApp: miniApp),
+              builder: (context) => MiniAppHostScreen(
+                miniApp: miniApp,
+                hostScreenType: HostScreenType.fullScreen,
+              ),
             ),
           );
         },

@@ -36,16 +36,16 @@ class MiniAppEntityHostState {
 
 // We use AsyncNotifier since initializing the bridge is an async operation.
 // We also use 'family' to pass the selected MiniAppEntity object to the provider.
-class MiniAppEntityHostNotifier
-    extends
-        AutoDisposeFamilyAsyncNotifier<MiniAppEntityHostState, MiniAppEntity> {
+class MiniAppEntityHostNotifier extends AsyncNotifier<MiniAppEntityHostState> {
   // final MiniAppEntity
   // @override
   // Future<MiniAppEntityHostState> build(MiniAppEntity arg) async {
 
   // }
 
-  late MiniAppEntity miniAppEntity;
+  MiniAppEntityHostNotifier(this.miniAppEntity);
+
+  MiniAppEntity miniAppEntity;
   // MiniAppEntityHostNotifier(this.miniAppEntity);
 
   void initializeBridge(InAppWebViewController controller, AppConfig config) {
@@ -81,8 +81,9 @@ class MiniAppEntityHostNotifier
   }
 
   @override
-  FutureOr<MiniAppEntityHostState> build(arg) {
-    miniAppEntity = arg;
+  FutureOr<MiniAppEntityHostState> build() {
+    // initializeBridge(controller, config);
+    //  miniAppEntity = arg;
 
     return MiniAppEntityHostState(
       status: MiniAppStatus.loading,
@@ -90,6 +91,17 @@ class MiniAppEntityHostNotifier
       miniApp: miniAppEntity,
     );
   }
+
+  // @override
+  // FutureOr<MiniAppEntityHostState> build(arg) {
+  //   miniAppEntity = arg;
+
+  //   return MiniAppEntityHostState(
+  //     status: MiniAppStatus.loading,
+  //     canGoBack: false,
+  //     miniApp: miniAppEntity,
+  //   );
+  // }
 
   // @override
   // FutureOr<MiniAppEntityHostState> build() {
@@ -104,7 +116,7 @@ class MiniAppEntityHostNotifier
 
 final miniAppHostProvider = AsyncNotifierProvider.autoDispose
     .family<MiniAppEntityHostNotifier, MiniAppEntityHostState, MiniAppEntity>(
-      MiniAppEntityHostNotifier.new,
+      (entity) => MiniAppEntityHostNotifier(entity),
     );
 
 

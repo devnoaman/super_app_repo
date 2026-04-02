@@ -20,9 +20,19 @@ final appCtxProvider = Provider<GlobalKey<ScaffoldState>>((ref) {
   return GlobalKey<ScaffoldState>();
 });
 
+enum HostScreenType {
+  fullScreen,
+  embedded,
+}
+
 class MiniAppHostScreen extends ConsumerStatefulWidget {
   final MiniAppEntity miniApp;
-  const MiniAppHostScreen({super.key, required this.miniApp});
+  final HostScreenType hostScreenType;
+  const MiniAppHostScreen({
+    super.key,
+    required this.miniApp,
+    required this.hostScreenType,
+  });
 
   @override
   ConsumerState<MiniAppHostScreen> createState() => _MiniAppHostScreenState();
@@ -38,57 +48,7 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
   @override
   void initState() {
     super.initState();
-
-    // // -----------------------------------------------------------------
-    // //  THIS IS THE MAGIC
-    // //  Only run this logic in debug mode
-    // // -----------------------------------------------------------------
-    // if (kDebugMode) {
-    //   _watchMiniApp();
-    // }
   }
-
-  // void _watchMiniApp() {
-  //   try {
-  //     // 1. IMPORTANT: Adjust this relative path!
-  //     // This path must be the path from your `super_gudea` app
-  //     // to the `camera_mini_app`'s build directory.
-  //     final miniAppBuildDir = Directory(
-  //       '../../../../apps/camera_mini_app/build/web',
-  //     );
-
-  //     if (!miniAppBuildDir.existsSync()) {
-  //       print('Mini-app watch directory not found. Hot reload will be manual.');
-  //       print('Expected path: ${miniAppBuildDir.absolute.path}');
-  //       return;
-  //     }
-
-  //     // 2. Create the watcher
-  //     final watcher = DirectoryWatcher(miniAppBuildDir.absolute.path);
-
-  //     // 3. Listen for changes
-  //     _watcherSubscription = watcher.events.listen((event) {
-  //       // We only care when files are modified or added
-  //       if (event.type == ChangeType.ADD || event.type == ChangeType.MODIFY) {
-  //         // 4. Debounce the reload
-  //         // The build process modifies many files. We don't want
-  //         // to reload 10 times. We'll wait 500ms after the *last*
-  //         // file change to trigger the reload.
-  //         _reloadTimer?.cancel();
-  //         _reloadTimer = Timer(const Duration(milliseconds: 500), () {
-  //           print('Change detected in mini-app... Reloading WebView.');
-  //           _webViewController?.reload();
-  //         });
-  //       }
-  //     });
-
-  //     print(
-  //       'Watching for mini-app changes at: ${miniAppBuildDir.absolute.path}',
-  //     );
-  //   } catch (e) {
-  //     print('Error setting up mini-app file watcher: $e');
-  //   }
-  // }
 
   @override
   void dispose() {
@@ -127,73 +87,78 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
             },
             child: Scaffold(
               key: appKey,
-              appBar: AppBar(
-                title: Text(state.miniApp.name),
-                backgroundColor: state.miniApp.primaryColor,
-                leadingWidth: 100,
-                leading: Center(
-                  child: TextButton.icon(
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
-                        state.miniApp.primaryColor == Colors.white
-                            ? Colors.red.withAlpha(20)
-                            : Colors.white,
-                      ),
-                      foregroundColor: WidgetStatePropertyAll(Colors.red),
-                    ),
-
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    label: Text('اغلاق'),
-                    icon: Icon(Icons.close),
-                  ),
-                ),
-                actions: [
-                  CustomPopup(
-                    // backgroundColor: Colors.red,
-                    barrierColor: state.miniApp.primaryColor.withAlpha(75),
-                    content: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: size.width * .4,
-                        // maxHeight: size.width*.4,
-                        minWidth: size.width * .4,
-                        maxWidth: size.width * .4,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ListTile(
-                            onTap: () {
-                              _webViewController?.reload();
-                            },
-                            leading: Icon(Icons.refresh),
-                            title: Text('reload'),
+              appBar: widget.hostScreenType == HostScreenType.fullScreen
+                  ? null
+                  : AppBar(
+                      title: Text(state.miniApp.name),
+                      backgroundColor: state.miniApp.primaryColor,
+                      leadingWidth: 100,
+                      leading: Center(
+                        child: TextButton.icon(
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStatePropertyAll(
+                              state.miniApp.primaryColor == Colors.white
+                                  ? Colors.red.withAlpha(20)
+                                  : Colors.white,
+                            ),
+                            foregroundColor: WidgetStatePropertyAll(Colors.red),
                           ),
-                          ListTile(
-                            onTap: () {
-                              // _webViewController?.reload();
-                              Navigator.of(context).pop();
-                              showDialog(
-                                context: context,
-                                builder: (context) =>
-                                    AboutAppDialog(miniApp: widget.miniApp),
-                              );
-                            },
-                            leading: Icon(Icons.perm_device_info_rounded),
-                            title: Text('about app'),
-                          ),
-                        ],
-                      ),
-                    ),
 
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Icon(Icons.info_outline),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          label: Text('اغلاق'),
+                          icon: Icon(Icons.close),
+                        ),
+                      ),
+                      actions: [
+                        CustomPopup(
+                          // backgroundColor: Colors.red,
+                          barrierColor: state.miniApp.primaryColor.withAlpha(
+                            75,
+                          ),
+                          content: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: size.width * .4,
+                              // maxHeight: size.width*.4,
+                              minWidth: size.width * .4,
+                              maxWidth: size.width * .4,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ListTile(
+                                  onTap: () {
+                                    _webViewController?.reload();
+                                  },
+                                  leading: Icon(Icons.refresh),
+                                  title: Text('reload'),
+                                ),
+                                ListTile(
+                                  onTap: () {
+                                    // _webViewController?.reload();
+                                    Navigator.of(context).pop();
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AboutAppDialog(
+                                        miniApp: widget.miniApp,
+                                      ),
+                                    );
+                                  },
+                                  leading: Icon(Icons.perm_device_info_rounded),
+                                  title: Text('about app'),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Icon(Icons.info_outline),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
               body: Stack(
                 children: [
                   Opacity(

@@ -13,8 +13,8 @@ class HomeRepositoryImpl implements IHomeRepository {
 
     return [
       MiniAppEntity(
-        id: 'profile_editor',
-        name: 'Profile Editor',
+        id: 'fresh_app',
+        name: 'Fresh app',
         version: '1.0.0',
         requiredVersion: '1.0.0',
         logoUrl:

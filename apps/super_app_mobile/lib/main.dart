@@ -14,7 +14,11 @@ void main() {
   }
   // Add ProviderScope at the root of the application.
 
-  runApp(const ProviderScope(child: SuperApp()));
+  runApp(
+    const ProviderScope(
+      child: SuperApp(),
+    ),
+  );
 }
 
 class SuperApp extends StatelessWidget {

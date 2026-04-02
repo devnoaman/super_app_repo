@@ -81,9 +81,13 @@ class _MiniAppState extends State<MiniApp> {
       ],
       supportedLocales: [Locale('ar'), Locale('en')],
 
-      home: isShell == true
-          ? ProfileScreen(shellService: widget.shellService)
-          : const DownloadSuperAppScreen(),
+      home:
+          // isShell == true
+          //     ?
+          ProfileScreen(shellService: widget.shellService),
+      // :
+
+      // const DownloadSuperAppScreen()
       routes: {'/settings': (context) => const SettingsScreen()},
     );
   }
