@@ -9,9 +9,10 @@ export 'package:super_app_bridge/src/shell_service_interface.dart';
 ///
 /// On Web, returns [WebShellService].
 /// On Mobile, returns [MobileShellService] (stub).
-ShellService getShellService() => impl.getShellService();
+ShellService getShellService({required String apiKey}) =>
+    impl.getShellService(apiKey: apiKey);
 
 /// Legacy factory function. Use [getShellService] instead.
 ShellService getPlatformShellService({required String apiKey}) {
-  return impl.getShellService();
+  return impl.getShellService(apiKey: apiKey);
 }

@@ -23,7 +23,8 @@ class HomeRepositoryImpl implements IHomeRepository {
         url: "http://localhost:55414/",
         primaryColor: Colors.teal,
         requiredPermissions: ['camera', 'storage', 'scan', 'location', 'uri'],
-        apiKey: 'super-secret-key-123',
+        apiKey: 'apiKey',
+        // apiKey: 'super-secret-key-123',
       ),
       MiniAppEntity(
         id: 'Inspector',

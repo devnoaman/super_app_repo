@@ -12,7 +12,7 @@ import 'package:web/web.dart' as html;
 
 import 'package:flutter/foundation.dart'; // For debugPrint
 
-ShellService getShellService() => WebShellService();
+ShellService getShellService({required String apiKey}) => WebShellService(apiKey: apiKey);
 // JS interop for the callHandler function (remains top-level)
 @JS('window.flutter_inappwebview.callHandler')
 external JSPromise _callHandler(JSString handlerName, JSAny? args1);
@@ -22,7 +22,7 @@ external JSPromise _callHandler(JSString handlerName, JSAny? args1);
 /// This service encapsulates bridge initialization, handles inbound event
 /// streaming, and provides methods for outbound API calls.
 class WebShellService implements ShellService {
-  static const String _apiKey = "super-secret-key-123";
+  String _apiKey = "";
 
   /// Manages the inbound event stream from the native shell.
   final _eventController = StreamController<ShellEvent>.broadcast();
@@ -40,9 +40,12 @@ class WebShellService implements ShellService {
   Future<void> get isReady => _readyCompleter.future;
 
   /// Creates the service and begins initialization.
-  WebShellService() {
+  WebShellService({required this.apiKey}) {
+    debugPrint("ShellService: Initializing with API key: $apiKey");
+    _apiKey = apiKey;
     _initialize();
   }
+  final String apiKey;
 
   /// Checks if the JS bridge is ready, or waits for the ready event.
   void _initialize() {

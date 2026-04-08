@@ -28,7 +28,7 @@ class SuperApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Super App Shell',
-      locale: Locale('en'),
+      locale: Locale('ar'),
       supportedLocales: [
         Locale('ar'),
         Locale('en'),
@@ -40,9 +40,14 @@ class SuperApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       //
+      themeMode: ThemeMode.light,
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+      ),
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        // brightness: Brightness.light,
       ),
       //
       home: HomeScreen(),

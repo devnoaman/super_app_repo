@@ -6,7 +6,8 @@ import 'package:super_app_manager/super_app_manager.dart';
 
 import 'shell_service_interface.dart';
 
-ShellService getShellService() => MobileShellService();
+ShellService getShellService({required String apiKey}) =>
+    MobileShellService(apiKey: apiKey);
 
 /// MOBILE implementation of the ShellService.
 ///
@@ -15,10 +16,13 @@ class MobileShellService implements ShellService {
   final _eventController = StreamController<ShellEvent>.broadcast();
   final _readyCompleter = Completer<void>();
 
-  MobileShellService() {
+  MobileShellService({required this.apiKey}) {
+    debugPrint("ShellService: Initializing with API key: $apiKey");
+
     // Mobile shell is ready immediately
     _readyCompleter.complete();
   }
+  final String apiKey;
 
   @override
   Stream<ShellEvent> get events => _eventController.stream;
