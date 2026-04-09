@@ -192,7 +192,7 @@ class _GetCurrentLocationState extends State<GetCurrentLocation>
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Lottie.asset(
-                '/lib/assets/lottie/location.json',
+                'lib/assets/lottie/location.json',
                 width: 45,
                 height: 45,
                 package: 'super_app_manager',

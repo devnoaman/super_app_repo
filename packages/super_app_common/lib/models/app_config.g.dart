@@ -11,6 +11,7 @@ _AppConfig _$AppConfigFromJson(Map<String, dynamic> json) => _AppConfig(
   theme: json['theme'] as String? ?? "dark",
   apiEndpoint: json['apiEndpoint'] as String,
   deviceLocale: json['deviceLocale'] as String? ?? "en_US",
+  topSafeArea: (json['topSafeArea'] as num?)?.toDouble(),
 );
 
 Map<String, dynamic> _$AppConfigToJson(_AppConfig instance) =>
@@ -19,4 +20,5 @@ Map<String, dynamic> _$AppConfigToJson(_AppConfig instance) =>
       'theme': instance.theme,
       'apiEndpoint': instance.apiEndpoint,
       'deviceLocale': instance.deviceLocale,
+      'topSafeArea': instance.topSafeArea,
     };

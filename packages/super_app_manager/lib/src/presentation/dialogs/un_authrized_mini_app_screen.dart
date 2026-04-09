@@ -10,47 +10,49 @@ class UnAuthrizedMiniAppScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Iconsax.lock),
+    return Card(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Iconsax.lock),
 
-        const Center(
-          child: Text(
-            "عذرا ",
+          const Center(
+            child: Text(
+              "عذرا ",
+            ),
           ),
-        ),
-        const Center(
-          child: Text(
-            "لا يمكن تشغيل هذا التطبيق في الوقت الحالي ",
+          const Center(
+            child: Text(
+              "لا يمكن تشغيل هذا التطبيق في الوقت الحالي ",
+            ),
           ),
-        ),
-        const Center(
-          child: Text(
-            "حاول مجددا في وقت لاحق",
+          const Center(
+            child: Text(
+              "حاول مجددا في وقت لاحق",
+            ),
           ),
-        ),
 
-        // application information
-        Card(
-          child: Column(
-            children: [
-              ListTile(
-                title: Text('الاصدار الحالي'),
-                subtitle: Text(miniApp.version),
-              ),
-              ListTile(
-                title: Text('الاصدار المطلوب'),
-                subtitle: Text(miniApp.requiredVersion),
-              ),
-            ],
+          // application information
+          Card(
+            child: Column(
+              children: [
+                ListTile(
+                  title: Text('الاصدار الحالي'),
+                  subtitle: Text(miniApp.version),
+                ),
+                ListTile(
+                  title: Text('الاصدار المطلوب'),
+                  subtitle: Text(miniApp.requiredVersion),
+                ),
+              ],
+            ),
           ),
-        ),
-        ElevatedButton.icon(
-          onPressed: () {},
-          label: Text("ارسال بلاغ"),
-        ),
-      ],
+          ElevatedButton.icon(
+            onPressed: () {},
+            label: Text("ارسال بلاغ"),
+          ),
+        ],
+      ),
     );
   }
 }

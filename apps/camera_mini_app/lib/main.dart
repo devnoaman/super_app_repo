@@ -81,13 +81,9 @@ class _MiniAppState extends State<MiniApp> {
       ],
       supportedLocales: [Locale('ar'), Locale('en')],
 
-      home:
-          // isShell == true
-          //     ?
-          ProfileScreen(shellService: widget.shellService),
-      // :
-
-      // const DownloadSuperAppScreen()
+      home: isShell == true
+          ? ProfileScreen(shellService: widget.shellService)
+          : const DownloadSuperAppScreen(),
       routes: {'/settings': (context) => const SettingsScreen()},
     );
   }
@@ -113,28 +109,30 @@ class DownloadSuperAppScreen extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'To use this mini app, you need to install the Super App.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18),
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: () =>
-                    _launchUrl('https://apps.apple.com/app/your-app-id'),
-                child: const Text('Download from App Store'),
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () => _launchUrl(
-                  'https://play.google.com/store/apps/details?id=your.package.name',
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'To use this mini app, you need to install the Super App.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18),
                 ),
-                child: const Text('Download from Play Store'),
-              ),
-            ],
+                const SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: () =>
+                      _launchUrl('https://apps.apple.com/app/your-app-id'),
+                  child: const Text('Download from App Store'),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () => _launchUrl(
+                    'https://play.google.com/store/apps/details?id=your.package.name',
+                  ),
+                  child: const Text('Download from Play Store'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -217,6 +215,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _message = "Error: $message";
             });
           }
+        default:
+          return;
       }
     });
     // ShellService.initialize((String base64) {
@@ -388,6 +388,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
+
+              SizedBox(height: 800),
             ],
           ),
         ),

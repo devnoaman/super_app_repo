@@ -105,10 +105,14 @@ class MiniAppHost extends StatelessWidget {
       child: MiniAppHostScreen(
         miniApp: miniApp,
         hostScreenType: HostScreenType.embedded,
-        extendBodyBehindAppBar: true,
+        // extendBodyBehindAppBar: true,
+        onPageScrolled: (deltaX, deltaY) {
+          print("deltaX: $deltaX, deltaY: $deltaY");
+        },
 
-        appBarBuilder: (appData, context) => _MiniAppHostBar(
+        appBarBuilder: (appData, context, isScrolled) => _MiniAppHostBar(
           appData: appData,
+          isScrolled: isScrolled,
           onInfo: () {
             showModalBottomSheet(
               context: context,
@@ -120,18 +124,15 @@ class MiniAppHost extends StatelessWidget {
           },
           onClose: () => Navigator.pop(context),
         ),
-       
-       
-       
-       
-        unauthorizedScreenBuilder: (miniApp) {
-          return Center(
-            child: Text("Unauthorized ${miniApp.name}"),
-          );
-        },
-        loadingScreenBuilder: () {
-          return const Center(child: FlutterLogo());
-        },
+
+        // unauthorizedScreenBuilder: (miniApp) {
+        //   return Center(
+        //     child: Text("Unauthorized ${miniApp.name}"),
+        //   );
+        // },
+        // loadingScreenBuilder: () {
+        //   return const Center(child: FlutterLogo());
+        // },
       ),
     );
   }
@@ -143,11 +144,13 @@ class _MiniAppHostBar extends StatelessWidget implements PreferredSizeWidget {
     required this.appData,
     required this.onInfo,
     required this.onClose,
+    required this.isScrolled,
   });
 
   final MiniAppEntity appData;
   final VoidCallback onInfo;
   final VoidCallback onClose;
+  final bool isScrolled;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -162,24 +165,37 @@ class _MiniAppHostBar extends StatelessWidget implements PreferredSizeWidget {
 
     return ClipRect(
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [
-                accent.withOpacity(0.82),
-                darkerAccent.withOpacity(0.88),
-              ],
-            ),
-            border: Border(
-              bottom: BorderSide(
-                color: _onColor.withOpacity(0.12),
-                width: 0.6,
+        filter: ImageFilter.blur(
+          sigmaX: isScrolled ? 10 : 0,
+          sigmaY: isScrolled ? 10 : 0,
+        ),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          decoration:
+              // isScrolled
+              //     ?
+              BoxDecoration(
+                color: appData.primaryColor,
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    accent.withOpacity(0.82),
+                    darkerAccent.withOpacity(0.88),
+                  ],
+                ),
+                // border: Border(
+                //   bottom: BorderSide(
+                //     // color: _onColor.withOpacity(0.12),
+                //     width: 0.6,
+                //   ),
+                // ),
               ),
-            ),
-          ),
+          // :
+
+          // BoxDecoration(
+          //     color: appData.primaryColor,
+          //   )
           child: SafeArea(
             bottom: false,
             child: SizedBox(

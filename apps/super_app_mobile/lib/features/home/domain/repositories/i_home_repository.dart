@@ -13,29 +13,28 @@ class HomeRepositoryImpl implements IHomeRepository {
 
     return [
       MiniAppEntity(
-        id: 'fresh_app',
-        name: 'Fresh app',
+        id: 'أحداث',
+        name: 'أحداث',
         version: '1.0.0',
         requiredVersion: '1.0.0',
-        logoUrl:
-            'https://eu.ui-avatars.com/api/?name=Medical+Regulator&size=250',
-        description: 'Edit your profile and update your photo.',
+        logoUrl: 'https://eu.ui-avatars.com/api/?name=Gudea+Events&size=250',
+        description: 'احداث متنوعة تقدمها لكم Gudea',
         url: "http://localhost:55414/",
-        primaryColor: Colors.teal,
+        primaryColor: Color(0xff007A3D),
         requiredPermissions: ['camera', 'storage', 'scan', 'location', 'uri'],
         apiKey: 'apiKey',
         // apiKey: 'super-secret-key-123',
       ),
       MiniAppEntity(
-        id: 'Inspector',
+        id: 'Dummy Mini App',
         version: '1.0.0',
         requiredVersion: '1.0.0',
-        name: 'Inspector app',
-        logoUrl: 'https://eu.ui-avatars.com/api/?name=Inspector+App&size=250',
-        description: 'Edit your profile and update your photo.',
+        name: 'Dummy Mini App',
+        logoUrl: 'https://eu.ui-avatars.com/api/?name=Dummy+Mini+App&size=250',
+        description: 'A dummy mini app for demonstration purposes.',
         url: 'https://uofapp.web.app', // The URL we were using before
         primaryColor: const Color.fromARGB(255, 231, 224, 42),
-        requiredPermissions: ['camera', 'storage'],
+        requiredPermissions: ['camera', 'storage', 'scan', 'location', 'uri'],
         apiKey: 'super-secret-key-123',
       ),
     ];

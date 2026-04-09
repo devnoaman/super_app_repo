@@ -10,6 +10,7 @@ abstract class AppConfig with _$AppConfig {
     @Default("dark") String? theme,
     required String apiEndpoint,
     @Default("en_US") String? deviceLocale,
+    double? topSafeArea,
   }) = _AppConfig;
 
   factory AppConfig.fromJson(Map<String, dynamic> json) =>

@@ -1,15 +1,18 @@
 // The screen now takes the MiniApp as a parameter.
 import 'dart:async';
-import 'dart:collection';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:shared/shared.dart';
 import 'package:flutter_popup/flutter_popup.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:super_app_common/models/app_config.dart';
 import 'package:super_app_manager/src/framework/di_accessor_container.dart';
 import 'package:super_app_manager/src/presentation/dialogs/un_authrized_mini_app_screen.dart';
+import 'package:super_app_manager/src/utils/web_user_events.dart';
 
 import '../mini_app_entity/mini_app_entity.dart';
 import '../providers/mini_app_host_provider.dart';
@@ -21,7 +24,7 @@ final appCtxProvider = Provider<GlobalKey<ScaffoldState>>((ref) {
   return GlobalKey<ScaffoldState>();
 });
 
-class MiniAppHostScreen extends ConsumerStatefulWidget {
+class MiniAppHostScreen extends StatefulHookConsumerWidget {
   final MiniAppEntity miniApp;
   final LoadingScreenBuilder? loadingScreenBuilder;
   final ErrorScreenBuilder? errorScreenBuilder;
@@ -29,6 +32,10 @@ class MiniAppHostScreen extends ConsumerStatefulWidget {
   final AppBarBuilder? appBarBuilder;
   final HostScreenType hostScreenType;
   final bool extendBodyBehindAppBar;
+
+  /// Called on every scroll event detected inside the mini-app page.
+  final OnPageScrolledCallback? onPageScrolled;
+
   const MiniAppHostScreen({
     super.key,
     required this.miniApp,
@@ -38,6 +45,7 @@ class MiniAppHostScreen extends ConsumerStatefulWidget {
     this.unauthorizedScreenBuilder,
     this.appBarBuilder,
     this.extendBodyBehindAppBar = false,
+    this.onPageScrolled,
   });
 
   @override
@@ -71,6 +79,7 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
     final appKey = container.read(appCtxProvider);
     final notifier = ref.read(miniAppHostProvider(widget.miniApp).notifier);
     var size = MediaQuery.sizeOf(context);
+    final isScrolled = useState(false);
 
     return UncontrolledProviderScope(
       container: container,
@@ -96,7 +105,11 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
               extendBodyBehindAppBar: widget.extendBodyBehindAppBar,
               appBar: widget.hostScreenType == HostScreenType.fullScreen
                   ? null
-                  : widget.appBarBuilder?.call(state.miniApp, context) ??
+                  : widget.appBarBuilder?.call(
+                          state.miniApp,
+                          context,
+                          isScrolled.value,
+                        ) ??
                         AppBar(
                           title: Text(state.miniApp.name),
                           backgroundColor: state.miniApp.primaryColor,
@@ -182,11 +195,16 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
                         ),
               body: Stack(
                 children: [
+                  // state.status == MiniAppStatus.verified
+                  // ?
                   Opacity(
                     opacity: state.status == MiniAppStatus.verified ? 1.0 : 0.0,
                     // opacity: 1,
                     child: InAppWebView(
                       // key: UniqueKey(),
+                      // onScrollChanged: (controller, x, y) {
+                      //   print('onScrollChanged: $x, $y');
+                      // },
                       initialSettings: InAppWebViewSettings(
                         javaScriptEnabled: true,
                         cacheMode:
@@ -196,54 +214,43 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
                             CacheMode.LOAD_DEFAULT,
                       ),
                       // 1. INJECT THE JAVASCRIPT FIX
-                      initialUserScripts: UnmodifiableListView<UserScript>([
-                        UserScript(
-                          injectionTime:
-                              UserScriptInjectionTime.AT_DOCUMENT_START,
-                          source: """
-        // Save the original console functions
-        const originalLog = console.log;
-        const originalDebug = console.debug; // dart.developer.log often uses this
-        const originalInfo = console.info;
+                      initialUserScripts: WebUserEvents.all,
 
-        // Function to safely stringify objects
-        function parseArgs(args) {
-          return Array.from(args).map(arg => {
-            if (typeof arg === 'object' && arg !== null) {
-              try {
-                return JSON.stringify(arg, null, 2); // The '2' makes it pretty-printed
-              } catch (e) {
-                return '[Un-stringifiable Object]';
-              }
-            }
-            return arg;
-          });
-        }
-
-        // Override the console functions
-        console.log = function() {
-          originalLog.apply(console, parseArgs(arguments));
-        };
-        console.debug = function() {
-          originalDebug.apply(console, parseArgs(arguments));
-        };
-        console.info = function() {
-          originalInfo.apply(console, parseArgs(arguments));
-        };
-      """,
-                        ),
-                      ]),
                       initialUrlRequest: URLRequest(
                         url: WebUri(state.miniApp.url),
                       ),
                       onConsoleMessage: (controller, message) {
-                        print(message.message);
+                        print("message" + message.toString());
                       },
                       onWebViewCreated: (controller) {
                         // var view = View.of(context);
-                        Locale deviceLocale = Localizations.localeOf(context);
+                        Locale deviceLocale = Localizations.localeOf(
+                          context,
+                        );
 
                         _webViewController = controller;
+
+                        // Register the scroll handler injected by WebUserEvents.
+                        // Fires for every touchmove / wheel event inside the page.
+                        if (widget.onPageScrolled != null) {
+                          controller.addJavaScriptHandler(
+                            handlerName: 'onScroll',
+                            callback: (args) {
+                              if (args.isEmpty) return;
+                              final data = args[0] as Map<dynamic, dynamic>;
+                              final dx =
+                                  (data['deltaX'] as num?)?.toDouble() ?? 0;
+                              final dy =
+                                  (data['deltaY'] as num?)?.toDouble() ?? 0;
+                              widget.onPageScrolled!(dx, dy);
+                              if (dy > 0) {
+                                isScrolled.value = true;
+                              } else {
+                                isScrolled.value = false;
+                              }
+                            },
+                          );
+                        }
 
                         notifier.initializeBridge(
                           controller,
@@ -252,6 +259,7 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
                             theme: 'dark',
                             apiEndpoint: 'apiEndpoint',
                             deviceLocale: deviceLocale.languageCode,
+                            topSafeArea: 16,
                           ),
                         );
                       },
@@ -288,16 +296,17 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
 
   Widget _buildStatusOverlay(MiniAppStatus status, MiniAppEntity miniApp) {
     switch (status) {
-      case MiniAppStatus.loading:
-        return widget.loadingScreenBuilder?.call() ??
-            const Center(child: Text("Loading..."));
-      case MiniAppStatus.verifying:
-        return const Center(child: Text("Verifying..."));
       case MiniAppStatus.unauthorized:
         return widget.unauthorizedScreenBuilder?.call(miniApp) ??
             UnAuthrizedMiniAppScreen(
               miniApp: miniApp,
             );
+      case MiniAppStatus.loading:
+        return widget.loadingScreenBuilder?.call() ??
+            const Center(child: Text("Loading..."));
+      case MiniAppStatus.verifying:
+        return const Center(child: Text("Verifying..."));
+
       case MiniAppStatus.error:
         return const Center(child: Text("Failed to Load Mini-App"));
       case MiniAppStatus.verified:

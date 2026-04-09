@@ -10,9 +10,14 @@ typedef AppBarBuilder =
     PreferredSizeWidget Function(
       MiniAppEntity appData,
       BuildContext context,
+      bool isScrolled,
     );
 
 typedef LoadingScreenBuilder = Widget Function();
 typedef ErrorScreenBuilder =
     Widget Function(Object error, StackTrace stackTrace);
 typedef UnauthorizedScreenBuilder = Widget Function(MiniAppEntity miniApp);
+
+/// Callback fired whenever the mini-app page is scrolled.
+/// [deltaX] / [deltaY] — raw scroll delta since the last event (px, touch or wheel).
+typedef OnPageScrolledCallback = void Function(double deltaX, double deltaY);

@@ -1,13 +1,19 @@
 {
   "hosting": {
-    "source": ".",
+    "public": "build/web",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
-    "frameworksBackend": {
-      "region": "asia-east1"
-    }
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "predeploy": [
+      "flutter build web --no-tree-shake-icons --release"
+    ]
   }
 }
