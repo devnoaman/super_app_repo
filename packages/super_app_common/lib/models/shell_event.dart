@@ -24,6 +24,11 @@ class LocationUpdateEvent extends ShellEvent {
   LocationUpdateEvent(this.latitude, this.longitude);
 }
 
+class FileSaveResultEvent extends ShellEvent {
+  final String result;
+  FileSaveResultEvent(this.result);
+}
+
 /// Event for when a URI is launched.
 class LaunchUriEvent extends ShellEvent {
   final Uri uri;

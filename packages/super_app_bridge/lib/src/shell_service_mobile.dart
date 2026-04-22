@@ -112,4 +112,33 @@ class MobileShellService implements ShellService {
       _eventController.add(ShellErrorEvent("Launch uri failed", e));
     }
   }
+
+  @override
+  Future<void> requestFileSave(String suggestedFileName, Uint8List data) {
+    // TODO: implement requestFileSave
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> requestShare(
+    String text,
+    String? mimeType,
+    String? subject,
+    String? fileName,
+    Uint8List? file,
+  ) async {
+    try {
+      debugPrint("MobileShellService: requesting share...");
+      await AppOperations.share(text, mimeType, subject, fileName, file);
+    } catch (e) {
+      debugPrint("MobileShellService error: $e");
+      _eventController.add(ShellErrorEvent("Share request failed", e));
+    }
+  }
+
+  // @override
+  // Future<void> requestFileSave(String suggestedFileName, String data) {
+  //   // TODO: implement requestFileSave
+  //   throw UnimplementedError();
+  // }
 }

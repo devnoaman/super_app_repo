@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:super_app_common/super_app_common.dart';
 
 /// The abstract interface for the Shell Service.
@@ -27,9 +28,22 @@ abstract class ShellService {
   /// Requests the native shell to open the location picker.
   Future<void> requestLocation();
 
+  /// Requests the native shell to save a file .
+  ///
+  Future<void> requestFileSave(String suggestedFileName, Uint8List data);
+
   /// Fetches the [AppConfig] from the native shell.
   Future<AppConfig?> getConfiguration();
 
   /// Launches a URI in the native shell.
   Future<void> launchUri(Uri uri);
+
+  /// Requests the native shell to share something.
+  Future<void> requestShare(
+    String text,
+    String? mimeType,
+    String? subject,
+    String? fileName,
+    Uint8List? file,
+  );
 }

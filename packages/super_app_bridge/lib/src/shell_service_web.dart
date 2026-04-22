@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
@@ -12,7 +13,8 @@ import 'package:web/web.dart' as html;
 
 import 'package:flutter/foundation.dart'; // For debugPrint
 
-ShellService getShellService({required String apiKey}) => WebShellService(apiKey: apiKey);
+ShellService getShellService({required String apiKey}) =>
+    WebShellService(apiKey: apiKey);
 // JS interop for the callHandler function (remains top-level)
 @JS('window.flutter_inappwebview.callHandler')
 external JSPromise _callHandler(JSString handlerName, JSAny? args1);
@@ -87,6 +89,13 @@ class WebShellService implements ShellService {
         EventsHandler.onScanResult.toJS,
         ((JSString scanData) {
           _eventController.add(ScannerResultEvent(scanData.toDart));
+        }).toJS,
+      );
+      // --- Handler for File Save Result ---
+      globalContext.setProperty(
+        EventsHandler.onFileSaveResult.toJS,
+        ((JSString result) {
+          _eventController.add(FileSaveResultEvent(result.toDart));
         }).toJS,
       );
 
@@ -194,6 +203,21 @@ class WebShellService implements ShellService {
     }
   }
 
+  @override
+  Future<void> requestFileSave(String suggestedFileName, Uint8List data) async {
+    await isReady;
+    try {
+      debugPrint("ShellService: Requesting file save ...");
+      await _callHandler(
+        EventsHandler.onFileSave.toJS,
+        jsonEncode({"fileName": suggestedFileName, "data": data}).toJS,
+      ).toDart;
+    } catch (e) {
+      debugPrint("Error: Could not request file save. $e");
+      _eventController.add(ShellErrorEvent("File save request failed", e));
+    }
+  }
+
   /// Fetches the [AppConfig] from the native shell.
   @override
   Future<AppConfig?> getConfiguration() async {
@@ -233,6 +257,33 @@ class WebShellService implements ShellService {
     } catch (e) {
       debugPrint("Error: Could not launch URI. $e");
       _eventController.add(ShellErrorEvent("URI launch failed", e));
+    }
+  }
+
+  @override
+  Future<void> requestShare(
+    String text,
+    String? mimeType,
+    String? subject,
+    String? fileName,
+    Uint8List? file,
+  ) async {
+    await isReady;
+    try {
+      debugPrint("ShellService: Requesting share...");
+      await _callHandler(
+        EventsHandler.onShare.toJS,
+        jsonEncode({
+          "text": text,
+          "mimeType": mimeType,
+          "subject": subject,
+          "fileName": fileName,
+          "file": file,
+        }).toJS,
+      ).toDart;
+    } catch (e) {
+      debugPrint("Error: Could not request share. $e");
+      _eventController.add(ShellErrorEvent("Share request failed", e));
     }
   }
 }

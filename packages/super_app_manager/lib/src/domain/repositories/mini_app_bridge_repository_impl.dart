@@ -4,13 +4,14 @@ import 'package:super_app_common/super_app_common.dart';
 
 import '../../data/services/permission_handler_provider.dart';
 import '../../mini_app_entity/mini_app_entity.dart';
+import '../../models/mini_app_status.dart';
 import 'i_mini_app_bridge_repository.dart';
 
 class MiniAppBridgeRepositoryImpl implements IMiniAppBridgeRepository {
   @override
   Future<void> initialize({
     required InAppWebViewController controller,
-    required Function(bool isSuccess) onVerified,
+    required Function(MiniAppStatus verificationStatus) onVerified,
     required AppConfig config,
     required MiniAppEntity miniApp,
   }) async {
@@ -29,7 +30,7 @@ class MiniAppBridgeRepositoryImpl implements IMiniAppBridgeRepository {
 
   void _addVerificationHandler(
     InAppWebViewController controller,
-    Function(bool) onVerified,
+    Function(MiniAppStatus) onVerified,
     String validApiKey, // Accepts the key as a parameter
   ) {
     controller.addJavaScriptHandler(
@@ -37,7 +38,11 @@ class MiniAppBridgeRepositoryImpl implements IMiniAppBridgeRepository {
       callback: (args) {
         final String receivedKey = args.isNotEmpty ? args[0] : "";
         // Verifies against the passed-in key
-        onVerified(receivedKey == validApiKey);
+        onVerified(
+          receivedKey == validApiKey
+              ? Verified()
+              : const Unauthorized(UnauthorizedReason.apiKey),
+        );
       },
     );
   }

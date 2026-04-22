@@ -215,6 +215,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _message = "Error: $message";
             });
           }
+
+        case FileSaveResultEvent(:final result):
+          if (mounted) {
+            setState(() {
+              _message = "File Save Result: $result";
+            });
+          }
         default:
           return;
       }
@@ -268,6 +275,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _message = "Waiting for Super App to launch uri...";
     });
     widget.shellService.launchUri(Uri.parse("https://www.google.com"));
+  }
+
+  void _handleFileSave(String suggestedFileName, Uint8List data) {
+    setState(() {
+      _message = "Waiting for Super App to save file...";
+    });
+    widget.shellService.requestFileSave(suggestedFileName, data);
+  }
+
+  void _handleShare(
+    String text,
+    String? mimeType,
+    String? subject,
+    String? fileName,
+    Uint8List? file,
+  ) {
+    setState(() {
+      _message = "Waiting for Super App to share something...";
+    });
+    widget.shellService.requestShare(text, mimeType, subject, fileName, file);
   }
 
   @override
@@ -353,6 +380,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: const Icon(Icons.link),
                     label: const Text('launch uri'),
                     onPressed: _handleLaunchUri,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 15,
+                      ),
+                      textStyle: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.document_scanner),
+                    label: const Text('save file'),
+                    onPressed: () => _handleFileSave(
+                      "file2.txt",
+                      Uint8List.fromList(
+                        "Hello, this is a test file.".codeUnits,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 15,
+                      ),
+                      textStyle: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.share),
+                    label: const Text('share something'),
+                    onPressed: () => _handleShare(
+                      "Hello from Flutter Web Mini-App رثص",
+                      null,
+                      null,
+                      null,
+                      null,
+                    ),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 30,

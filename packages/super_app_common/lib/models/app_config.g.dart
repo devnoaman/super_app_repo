@@ -12,6 +12,7 @@ _AppConfig _$AppConfigFromJson(Map<String, dynamic> json) => _AppConfig(
   apiEndpoint: json['apiEndpoint'] as String,
   deviceLocale: json['deviceLocale'] as String? ?? "en_US",
   topSafeArea: (json['topSafeArea'] as num?)?.toDouble(),
+  exchangeToken: json['exchangeToken'] as String,
 );
 
 Map<String, dynamic> _$AppConfigToJson(_AppConfig instance) =>
@@ -21,4 +22,5 @@ Map<String, dynamic> _$AppConfigToJson(_AppConfig instance) =>
       'apiEndpoint': instance.apiEndpoint,
       'deviceLocale': instance.deviceLocale,
       'topSafeArea': instance.topSafeArea,
+      'exchangeToken': instance.exchangeToken,
     };

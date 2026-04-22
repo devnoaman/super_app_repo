@@ -11,6 +11,7 @@ abstract class AppConfig with _$AppConfig {
     required String apiEndpoint,
     @Default("en_US") String? deviceLocale,
     double? topSafeArea,
+    required String exchangeToken,
   }) = _AppConfig;
 
   factory AppConfig.fromJson(Map<String, dynamic> json) =>

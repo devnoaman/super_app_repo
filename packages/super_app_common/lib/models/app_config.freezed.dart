@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AppConfig {
 
- String get userId; String? get theme; String get apiEndpoint; String? get deviceLocale; double? get topSafeArea;
+ String get userId; String? get theme; String get apiEndpoint; String? get deviceLocale; double? get topSafeArea; String get exchangeToken;
 /// Create a copy of AppConfig
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AppConfigCopyWith<AppConfig> get copyWith => _$AppConfigCopyWithImpl<AppConfig>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppConfig&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.apiEndpoint, apiEndpoint) || other.apiEndpoint == apiEndpoint)&&(identical(other.deviceLocale, deviceLocale) || other.deviceLocale == deviceLocale)&&(identical(other.topSafeArea, topSafeArea) || other.topSafeArea == topSafeArea));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppConfig&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.apiEndpoint, apiEndpoint) || other.apiEndpoint == apiEndpoint)&&(identical(other.deviceLocale, deviceLocale) || other.deviceLocale == deviceLocale)&&(identical(other.topSafeArea, topSafeArea) || other.topSafeArea == topSafeArea)&&(identical(other.exchangeToken, exchangeToken) || other.exchangeToken == exchangeToken));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,theme,apiEndpoint,deviceLocale,topSafeArea);
+int get hashCode => Object.hash(runtimeType,userId,theme,apiEndpoint,deviceLocale,topSafeArea,exchangeToken);
 
 @override
 String toString() {
-  return 'AppConfig(userId: $userId, theme: $theme, apiEndpoint: $apiEndpoint, deviceLocale: $deviceLocale, topSafeArea: $topSafeArea)';
+  return 'AppConfig(userId: $userId, theme: $theme, apiEndpoint: $apiEndpoint, deviceLocale: $deviceLocale, topSafeArea: $topSafeArea, exchangeToken: $exchangeToken)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AppConfigCopyWith<$Res>  {
   factory $AppConfigCopyWith(AppConfig value, $Res Function(AppConfig) _then) = _$AppConfigCopyWithImpl;
 @useResult
 $Res call({
- String userId, String? theme, String apiEndpoint, String? deviceLocale, double? topSafeArea
+ String userId, String? theme, String apiEndpoint, String? deviceLocale, double? topSafeArea, String exchangeToken
 });
 
 
@@ -65,14 +65,15 @@ class _$AppConfigCopyWithImpl<$Res>
 
 /// Create a copy of AppConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? theme = freezed,Object? apiEndpoint = null,Object? deviceLocale = freezed,Object? topSafeArea = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? theme = freezed,Object? apiEndpoint = null,Object? deviceLocale = freezed,Object? topSafeArea = freezed,Object? exchangeToken = null,}) {
   return _then(_self.copyWith(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,theme: freezed == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
 as String?,apiEndpoint: null == apiEndpoint ? _self.apiEndpoint : apiEndpoint // ignore: cast_nullable_to_non_nullable
 as String,deviceLocale: freezed == deviceLocale ? _self.deviceLocale : deviceLocale // ignore: cast_nullable_to_non_nullable
 as String?,topSafeArea: freezed == topSafeArea ? _self.topSafeArea : topSafeArea // ignore: cast_nullable_to_non_nullable
-as double?,
+as double?,exchangeToken: null == exchangeToken ? _self.exchangeToken : exchangeToken // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userId,  String? theme,  String apiEndpoint,  String? deviceLocale,  double? topSafeArea)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userId,  String? theme,  String apiEndpoint,  String? deviceLocale,  double? topSafeArea,  String exchangeToken)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppConfig() when $default != null:
-return $default(_that.userId,_that.theme,_that.apiEndpoint,_that.deviceLocale,_that.topSafeArea);case _:
+return $default(_that.userId,_that.theme,_that.apiEndpoint,_that.deviceLocale,_that.topSafeArea,_that.exchangeToken);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.userId,_that.theme,_that.apiEndpoint,_that.deviceLocale,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userId,  String? theme,  String apiEndpoint,  String? deviceLocale,  double? topSafeArea)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userId,  String? theme,  String apiEndpoint,  String? deviceLocale,  double? topSafeArea,  String exchangeToken)  $default,) {final _that = this;
 switch (_that) {
 case _AppConfig():
-return $default(_that.userId,_that.theme,_that.apiEndpoint,_that.deviceLocale,_that.topSafeArea);case _:
+return $default(_that.userId,_that.theme,_that.apiEndpoint,_that.deviceLocale,_that.topSafeArea,_that.exchangeToken);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.userId,_that.theme,_that.apiEndpoint,_that.deviceLocale,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userId,  String? theme,  String apiEndpoint,  String? deviceLocale,  double? topSafeArea)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userId,  String? theme,  String apiEndpoint,  String? deviceLocale,  double? topSafeArea,  String exchangeToken)?  $default,) {final _that = this;
 switch (_that) {
 case _AppConfig() when $default != null:
-return $default(_that.userId,_that.theme,_that.apiEndpoint,_that.deviceLocale,_that.topSafeArea);case _:
+return $default(_that.userId,_that.theme,_that.apiEndpoint,_that.deviceLocale,_that.topSafeArea,_that.exchangeToken);case _:
   return null;
 
 }
@@ -213,7 +214,7 @@ return $default(_that.userId,_that.theme,_that.apiEndpoint,_that.deviceLocale,_t
 @JsonSerializable()
 
 class _AppConfig implements AppConfig {
-  const _AppConfig({required this.userId, this.theme = "dark", required this.apiEndpoint, this.deviceLocale = "en_US", this.topSafeArea});
+  const _AppConfig({required this.userId, this.theme = "dark", required this.apiEndpoint, this.deviceLocale = "en_US", this.topSafeArea, required this.exchangeToken});
   factory _AppConfig.fromJson(Map<String, dynamic> json) => _$AppConfigFromJson(json);
 
 @override final  String userId;
@@ -221,6 +222,7 @@ class _AppConfig implements AppConfig {
 @override final  String apiEndpoint;
 @override@JsonKey() final  String? deviceLocale;
 @override final  double? topSafeArea;
+@override final  String exchangeToken;
 
 /// Create a copy of AppConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppConfig&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.apiEndpoint, apiEndpoint) || other.apiEndpoint == apiEndpoint)&&(identical(other.deviceLocale, deviceLocale) || other.deviceLocale == deviceLocale)&&(identical(other.topSafeArea, topSafeArea) || other.topSafeArea == topSafeArea));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppConfig&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.apiEndpoint, apiEndpoint) || other.apiEndpoint == apiEndpoint)&&(identical(other.deviceLocale, deviceLocale) || other.deviceLocale == deviceLocale)&&(identical(other.topSafeArea, topSafeArea) || other.topSafeArea == topSafeArea)&&(identical(other.exchangeToken, exchangeToken) || other.exchangeToken == exchangeToken));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,theme,apiEndpoint,deviceLocale,topSafeArea);
+int get hashCode => Object.hash(runtimeType,userId,theme,apiEndpoint,deviceLocale,topSafeArea,exchangeToken);
 
 @override
 String toString() {
-  return 'AppConfig(userId: $userId, theme: $theme, apiEndpoint: $apiEndpoint, deviceLocale: $deviceLocale, topSafeArea: $topSafeArea)';
+  return 'AppConfig(userId: $userId, theme: $theme, apiEndpoint: $apiEndpoint, deviceLocale: $deviceLocale, topSafeArea: $topSafeArea, exchangeToken: $exchangeToken)';
 }
 
 
@@ -255,7 +257,7 @@ abstract mixin class _$AppConfigCopyWith<$Res> implements $AppConfigCopyWith<$Re
   factory _$AppConfigCopyWith(_AppConfig value, $Res Function(_AppConfig) _then) = __$AppConfigCopyWithImpl;
 @override @useResult
 $Res call({
- String userId, String? theme, String apiEndpoint, String? deviceLocale, double? topSafeArea
+ String userId, String? theme, String apiEndpoint, String? deviceLocale, double? topSafeArea, String exchangeToken
 });
 
 
@@ -272,14 +274,15 @@ class __$AppConfigCopyWithImpl<$Res>
 
 /// Create a copy of AppConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? theme = freezed,Object? apiEndpoint = null,Object? deviceLocale = freezed,Object? topSafeArea = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? theme = freezed,Object? apiEndpoint = null,Object? deviceLocale = freezed,Object? topSafeArea = freezed,Object? exchangeToken = null,}) {
   return _then(_AppConfig(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,theme: freezed == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
 as String?,apiEndpoint: null == apiEndpoint ? _self.apiEndpoint : apiEndpoint // ignore: cast_nullable_to_non_nullable
 as String,deviceLocale: freezed == deviceLocale ? _self.deviceLocale : deviceLocale // ignore: cast_nullable_to_non_nullable
 as String?,topSafeArea: freezed == topSafeArea ? _self.topSafeArea : topSafeArea // ignore: cast_nullable_to_non_nullable
-as double?,
+as double?,exchangeToken: null == exchangeToken ? _self.exchangeToken : exchangeToken // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

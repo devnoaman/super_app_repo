@@ -1,18 +1,11 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:super_app_common/models/app_config.dart';
+import 'package:super_app_manager/src/models/mini_app_status.dart';
 
 import '../mini_app_entity/mini_app_entity.dart';
 import 'bridge_repository_provider.dart';
-
-// import 'package:shell_app/features/home/domain/entities/mini_app.dart';
-// import 'package:shell_app/features/mini_app_host/data/repositories/mini_app_bridge_repository_impl.dart';
-// import 'package:shell_app/features/mini_app_host/domain/repositories/i_mini_app_bridge_repository.dart';
-
-enum MiniAppStatus { loading, verifying, verified, unauthorized, error }
 
 class MiniAppEntityHostState {
   final MiniAppStatus status;
@@ -54,13 +47,11 @@ class MiniAppEntityHostNotifier extends AsyncNotifier<MiniAppEntityHostState> {
       controller: controller,
       config: config,
       miniApp: miniAppEntity,
-      onVerified: (isSuccess) {
+      onVerified: (status) {
         // When the async operation completes, update the state.
         state = AsyncData(
           state.value!.copyWith(
-            status: isSuccess
-                ? MiniAppStatus.verified
-                : MiniAppStatus.unauthorized,
+            status: status,
           ),
         );
       },
@@ -68,12 +59,12 @@ class MiniAppEntityHostNotifier extends AsyncNotifier<MiniAppEntityHostState> {
   }
 
   void loadCompleted() {
-    state = AsyncData(state.value!.copyWith(status: MiniAppStatus.verifying));
+    state = AsyncData(state.value!.copyWith(status: Verifying()));
   }
 
   void loadFailed(String? errorMessage) {
     print("Error loading mini-app: $errorMessage");
-    state = AsyncData(state.value!.copyWith(status: MiniAppStatus.error));
+    state = AsyncData(state.value!.copyWith(status: Error()));
   }
 
   void updateCanGoBack(bool canGoBack) {
@@ -86,7 +77,7 @@ class MiniAppEntityHostNotifier extends AsyncNotifier<MiniAppEntityHostState> {
     //  miniAppEntity = arg;
 
     return MiniAppEntityHostState(
-      status: MiniAppStatus.loading,
+      status: Loading(),
       canGoBack: false,
       miniApp: miniAppEntity,
     );

@@ -28,6 +28,7 @@ class SuperApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Super App Shell',
+      debugShowCheckedModeBanner: false,
       locale: Locale('ar'),
       supportedLocales: [
         Locale('ar'),

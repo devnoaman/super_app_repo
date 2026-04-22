@@ -11,7 +11,9 @@ import 'package:flutter_popup/flutter_popup.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:super_app_common/models/app_config.dart';
 import 'package:super_app_manager/src/framework/di_accessor_container.dart';
-import 'package:super_app_manager/src/presentation/dialogs/un_authrized_mini_app_screen.dart';
+import 'package:super_app_manager/src/models/mini_app_status.dart';
+import 'package:super_app_manager/src/presentation/dialogs/loading_mini_app_screen.dart';
+import 'package:super_app_manager/src/presentation/dialogs/un_authorized_mini_app_screen.dart';
 import 'package:super_app_manager/src/utils/web_user_events.dart';
 
 import '../mini_app_entity/mini_app_entity.dart';
@@ -19,6 +21,7 @@ import '../providers/mini_app_host_provider.dart';
 import 'package:watcher/watcher.dart';
 
 import '../typedefs/host_screen_typedefs.dart';
+import 'dialogs/failed_load_mini_app.dart';
 
 final appCtxProvider = Provider<GlobalKey<ScaffoldState>>((ref) {
   return GlobalKey<ScaffoldState>();
@@ -32,6 +35,7 @@ class MiniAppHostScreen extends StatefulHookConsumerWidget {
   final AppBarBuilder? appBarBuilder;
   final HostScreenType hostScreenType;
   final bool extendBodyBehindAppBar;
+  final AppConfig config;
 
   /// Called on every scroll event detected inside the mini-app page.
   final OnPageScrolledCallback? onPageScrolled;
@@ -46,6 +50,7 @@ class MiniAppHostScreen extends StatefulHookConsumerWidget {
     this.appBarBuilder,
     this.extendBodyBehindAppBar = false,
     this.onPageScrolled,
+    required this.config,
   });
 
   @override
@@ -198,8 +203,8 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
                   // state.status == MiniAppStatus.verified
                   // ?
                   Opacity(
-                    opacity: state.status == MiniAppStatus.verified ? 1.0 : 0.0,
-                    // opacity: 1,
+                    // opacity: state.status == Verified() ? 1.0 : 0.0,
+                    opacity: 1,
                     child: InAppWebView(
                       // key: UniqueKey(),
                       // onScrollChanged: (controller, x, y) {
@@ -209,9 +214,10 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
                         javaScriptEnabled: true,
                         cacheMode:
                             // kDebugMode
-                            //     ? CacheMode.LOAD_NO_CACHE
-                            //     :
-                            CacheMode.LOAD_DEFAULT,
+                            // ?
+                            CacheMode.LOAD_NO_CACHE,
+                        //     :
+                        // CacheMode.LOAD_DEFAULT,
                       ),
                       // 1. INJECT THE JAVASCRIPT FIX
                       initialUserScripts: WebUserEvents.all,
@@ -220,7 +226,7 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
                         url: WebUri(state.miniApp.url),
                       ),
                       onConsoleMessage: (controller, message) {
-                        print("message" + message.toString());
+                        // print("message" + message.toString());
                       },
                       onWebViewCreated: (controller) {
                         // var view = View.of(context);
@@ -254,13 +260,7 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
 
                         notifier.initializeBridge(
                           controller,
-                          AppConfig(
-                            userId: '123456',
-                            theme: 'dark',
-                            apiEndpoint: 'apiEndpoint',
-                            deviceLocale: deviceLocale.languageCode,
-                            topSafeArea: 16,
-                          ),
+                          widget.config,
                         );
                       },
                       onUpdateVisitedHistory:
@@ -296,20 +296,26 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
 
   Widget _buildStatusOverlay(MiniAppStatus status, MiniAppEntity miniApp) {
     switch (status) {
-      case MiniAppStatus.unauthorized:
+      case Unauthorized():
         return widget.unauthorizedScreenBuilder?.call(miniApp) ??
-            UnAuthrizedMiniAppScreen(
+            UnAuthorizedMiniAppScreen(
+              miniApp: miniApp,
+              reason: status.reason,
+            );
+      case Loading():
+        return widget.loadingScreenBuilder?.call() ??
+            LoadingMiniAppScreen(
               miniApp: miniApp,
             );
-      case MiniAppStatus.loading:
-        return widget.loadingScreenBuilder?.call() ??
-            const Center(child: Text("Loading..."));
-      case MiniAppStatus.verifying:
+      case Verifying():
         return const Center(child: Text("Verifying..."));
 
-      case MiniAppStatus.error:
-        return const Center(child: Text("Failed to Load Mini-App"));
-      case MiniAppStatus.verified:
+      case Error():
+        return FailedToLoadMiniAppScreen(
+          miniApp: miniApp,
+          reason: MiniAppFailureReason.unknown,
+        );
+      case Verified():
         return Container();
     }
   }

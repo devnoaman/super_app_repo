@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -17,6 +18,10 @@ class PermissionHandlerProvider {
     'scan': _addScannerHandler,
     'location': _addLocationHandler,
     'uri': _addUriHandler,
+    'fileSave': _addFileSaveHandler,
+    'share': _addShareHandler,
+    // Future permissions can be added here, e.g.:
+
     // Future handlers can be added here, e.g.:
     // 'location': _addLocationHandler,
   };
@@ -94,6 +99,83 @@ class PermissionHandlerProvider {
           final jsonString = jsonEncode(result);
           controller.evaluateJavascript(
             source: "${EventsHandler.onLaunchUriResult}('$jsonString')",
+          );
+        }
+      },
+    );
+  }
+
+  static void _addFileSaveHandler(InAppWebViewController controller) {
+    controller.addJavaScriptHandler(
+      handlerName: EventsHandler.onFileSave,
+      callback: (args) async {
+        log("File Save Request: ${args}");
+        final data = args.isNotEmpty
+            ? jsonDecode(args[0]) as Map<String, dynamic>
+            : null;
+        // file from uint8list
+        if (data == null) {
+          log("File save error: No data provided");
+          controller.evaluateJavascript(
+            source:
+                "${EventsHandler.onFileSaveResult}('error: No data provided')",
+          );
+          return;
+        }
+        var ddata = data["data"] as List<dynamic>;
+        final Uint8List file = Uint8List.fromList(
+          ddata.map((e) => e as int).toList(),
+        );
+        final String fileName = data["fileName"] ?? "file";
+        try {
+          await AppOperations.saveFile(fileName, file);
+          controller.evaluateJavascript(
+            source: "${EventsHandler.onFileSaveResult}('success')",
+          );
+        } catch (e) {
+          log("File save error: $e");
+          controller.evaluateJavascript(
+            source: "${EventsHandler.onFileSaveResult}('error: $e')",
+          );
+        }
+      },
+    );
+  }
+
+  static void _addShareHandler(InAppWebViewController controller) {
+    controller.addJavaScriptHandler(
+      handlerName: EventsHandler.onShare,
+      callback: (args) async {
+        log("Share Request: ${args}");
+        final data = args.isNotEmpty
+            ? jsonDecode(args[0]) as Map<String, dynamic>
+            : null;
+        if (data == null) {
+          log("Share error: No data provided");
+          controller.evaluateJavascript(
+            source:
+                "${EventsHandler.onShareResult}('error: No data provided')",
+          );
+          return;
+        }
+        final String text = data["text"] ?? "";
+        final String? mimeType = data["mimeType"];
+        final String? subject = data["subject"];
+        final String? fileName = data["fileName"];
+        final Uint8List? file = data["file"] != null
+            ? Uint8List.fromList(
+                (data["file"] as List<dynamic>).map((e) => e as int).toList(),
+              )
+            : null;
+        try {
+          await AppOperations.share(text, mimeType, subject, fileName, file);
+          controller.evaluateJavascript(
+            source: "${EventsHandler.onShareResult}('success')",
+          );
+        } catch (e) {
+          log("Share error: $e");
+          controller.evaluateJavascript(
+            source: "${EventsHandler.onShareResult}('error: $e')",
           );
         }
       },

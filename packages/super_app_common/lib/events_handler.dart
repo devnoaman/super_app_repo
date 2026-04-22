@@ -14,6 +14,11 @@ class EventsHandler {
 
   static const String onLaunchUriCall = "onLaunchUriCall";
   static const String onLaunchUriResult = "onLaunchUriResult";
+  static const String onFileSave = "onFileSave";
+  static const String onFileSaveResult = "onFileSaveResult";
+  static const String onShare = "onShare";
+  static const String onShareResult = "onShareResult";
+
   // static const String onLocationSet = "onLocationSet";
   // static const String openCmera = "";
   // static const String openCmera = "";

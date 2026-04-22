@@ -1,8 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:shared/shared.dart';
 import 'package:super_app_manager/super_app_manager.dart';
+import 'package:super_app_mobile/features/home/presentation/token.dart';
 import 'package:super_app_mobile/features/home/providers/home_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -22,6 +25,47 @@ class HomeScreen extends ConsumerWidget {
         data: (apps) {
           return Column(
             children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      final url = Uri.parse('https://uat.gudea.gov.iq/api/v1/auth/login');
+                      final request = await HttpClient().postUrl(url);
+                      request.headers.contentType = ContentType.json;
+                      request.write(jsonEncode({
+                        "phone": "07903974013",
+                        "password": "123456789"
+                      }));
+                      final response = await request.close();
+                      final responseBody = await response.transform(utf8.decoder).join();
+                      final data = jsonDecode(responseBody);
+                      
+                      if (data['status'] == 'success') {
+                        token = data['user']['token'];
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Token updated successfully!')),
+                          );
+                        }
+                      } else {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Failed to update token.')),
+                          );
+                        }
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Error: $e')),
+                        );
+                      }
+                    }
+                  },
+                  child: const Text('Get New Token'),
+                ),
+              ),
               Expanded(
                 child: ListView.builder(
                   itemCount: apps.length,
@@ -104,8 +148,16 @@ class MiniAppHost extends StatelessWidget {
     return Container(
       child: MiniAppHostScreen(
         miniApp: miniApp,
+        config: AppConfig(
+          userId: '123456',
+          theme: 'light',
+          apiEndpoint: 'apiEndpoint',
+          deviceLocale: 'en',
+          topSafeArea: 16,
+          exchangeToken: token,
+        ),
         hostScreenType: HostScreenType.embedded,
-        // extendBodyBehindAppBar: true,
+        extendBodyBehindAppBar: true,
         onPageScrolled: (deltaX, deltaY) {
           print("deltaX: $deltaX, deltaY: $deltaY");
         },
@@ -171,31 +223,25 @@ class _MiniAppHostBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          decoration:
-              // isScrolled
-              //     ?
-              BoxDecoration(
-                color: appData.primaryColor,
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [
-                    accent.withOpacity(0.82),
-                    darkerAccent.withOpacity(0.88),
-                  ],
-                ),
-                // border: Border(
-                //   bottom: BorderSide(
-                //     // color: _onColor.withOpacity(0.12),
-                //     width: 0.6,
-                //   ),
-                // ),
-              ),
-          // :
-
-          // BoxDecoration(
-          //     color: appData.primaryColor,
-          //   )
+          decoration: isScrolled
+              ? BoxDecoration(
+                  color: appData.primaryColor,
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      accent.withOpacity(0.82),
+                      darkerAccent.withOpacity(0.88),
+                    ],
+                  ),
+                  // border: Border(
+                  //   bottom: BorderSide(
+                  //     // color: _onColor.withOpacity(0.12),
+                  //     width: 0.6,
+                  //   ),
+                  // ),
+                )
+              : null,
           child: SafeArea(
             bottom: false,
             child: SizedBox(
@@ -757,3 +803,10 @@ class _PermissionChip extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+

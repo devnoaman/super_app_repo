@@ -60,5 +60,17 @@
 	<string>This app needs location access to get your location</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This app needs location access to get your location</string>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>NSDownloadsUsageDescription</key>
+	<string>This app needs access to save files to your device</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>This app needs access to save files to your device</string>
+	<key>NSExternalDocumentsFolderUsageDescription</key>
+	<string>This app needs access to save files to your device</string>
+	<key>NSUbiquitousContainersUsageDescription</key>
+	<string>This app needs access to save files to your device</string>
 </dict>
 </plist>
