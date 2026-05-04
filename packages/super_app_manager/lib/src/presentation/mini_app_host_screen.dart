@@ -14,6 +14,7 @@ import 'package:super_app_manager/src/framework/di_accessor_container.dart';
 import 'package:super_app_manager/src/models/mini_app_status.dart';
 import 'package:super_app_manager/src/presentation/dialogs/loading_mini_app_screen.dart';
 import 'package:super_app_manager/src/presentation/dialogs/un_authorized_mini_app_screen.dart';
+import 'package:super_app_manager/src/utils/extentions.dart';
 import 'package:super_app_manager/src/utils/web_user_events.dart';
 
 import '../mini_app_entity/mini_app_entity.dart';
@@ -114,6 +115,23 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
                           state.miniApp,
                           context,
                           isScrolled.value,
+                          () {
+                            showModalBottomSheet(
+                              context: context,
+                              isDismissible: true,
+                              isScrollControlled: true,
+                              builder: (context) => _MiniAppInfoSheet(
+                                appData: state.miniApp,
+                                onReload: () {
+                                  _webViewController?.reload();
+                                },
+                              ),
+
+                              // AboutAppDialog(
+                              //   miniApp: widget.miniApp,
+                              // ),
+                            );
+                          },
                         ) ??
                         AppBar(
                           title: Text(state.miniApp.name),
@@ -143,9 +161,7 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
                             CustomPopup(
                               // backgroundColor: Colors.red,
                               barrierColor: state.miniApp.primaryColor
-                                  .withAlpha(
-                                    75,
-                                  ),
+                                  .withAlpha(75),
                               content: ConstrainedBox(
                                 constraints: BoxConstraints(
                                   minHeight: size.width * .4,
@@ -172,6 +188,9 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
                                             color: Colors.transparent,
                                             child: _MiniAppInfoSheet(
                                               appData: state.miniApp,
+                                              onReload: () {
+                                                _webViewController?.reload();
+                                              },
                                             ),
                                           ),
 
@@ -230,9 +249,7 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
                       },
                       onWebViewCreated: (controller) {
                         // var view = View.of(context);
-                        Locale deviceLocale = Localizations.localeOf(
-                          context,
-                        );
+                        Locale deviceLocale = Localizations.localeOf(context);
 
                         _webViewController = controller;
 
@@ -258,10 +275,7 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
                           );
                         }
 
-                        notifier.initializeBridge(
-                          controller,
-                          widget.config,
-                        );
+                        notifier.initializeBridge(controller, widget.config);
                       },
                       onUpdateVisitedHistory:
                           (controller, url, isReload) async {
@@ -279,11 +293,9 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
                   ),
                   AnimatedOpacity(
                     opacity: 1,
+                    // opacity: state.status == Verified() ? 1.0 : 0.0,
                     duration: Durations.medium2,
-                    child: _buildStatusOverlay(
-                      state.status,
-                      widget.miniApp,
-                    ),
+                    child: _buildStatusOverlay(state.status, widget.miniApp),
                   ),
                 ],
               ),
@@ -298,15 +310,10 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
     switch (status) {
       case Unauthorized():
         return widget.unauthorizedScreenBuilder?.call(miniApp) ??
-            UnAuthorizedMiniAppScreen(
-              miniApp: miniApp,
-              reason: status.reason,
-            );
+            UnAuthorizedMiniAppScreen(miniApp: miniApp, reason: status.reason);
       case Loading():
         return widget.loadingScreenBuilder?.call() ??
-            LoadingMiniAppScreen(
-              miniApp: miniApp,
-            );
+            LoadingMiniAppScreen(miniApp: miniApp);
       case Verifying():
         return const Center(child: Text("Verifying..."));
 
@@ -355,8 +362,12 @@ class AboutAppDialog extends StatelessWidget {
 
 // ─── Info bottom sheet ───────────────────────────────────────────────────────
 class _MiniAppInfoSheet extends StatelessWidget {
-  const _MiniAppInfoSheet({required this.appData});
+  const _MiniAppInfoSheet({
+    required this.appData,
+    required this.onReload,
+  });
   final MiniAppEntity appData;
+  final VoidCallback onReload;
 
   bool get _isDarkColor => appData.primaryColor.computeLuminance() < 0.4;
   Color get _onColor => _isDarkColor ? Colors.white : Colors.black87;
@@ -587,6 +598,67 @@ class _MiniAppInfoSheet extends StatelessWidget {
                                     const SizedBox(width: 8),
                                     Text(
                                       'Got it',
+                                      style: TextStyle(
+                                        color: _isDarkColor
+                                            ? Colors.white
+                                            : Colors.black87,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                        letterSpacing: 0.3,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      8.hGap,
+                      //  Reload CTA
+                      SizedBox(
+                        width: double.infinity,
+                        height: 52,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: accent),
+                            // gradient: LinearGradient(
+                            //   colors: [
+                            //     accent,
+                            //     // Color.lerp(accent, Colors.black, 0.22)!,
+                            //   ],
+                            // ),
+                            borderRadius: BorderRadius.circular(14),
+                            boxShadow: [
+                              BoxShadow(
+                                color: accent.withOpacity(0.38),
+                                blurRadius: 16,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(14),
+                              onTap: () {
+                                Navigator.pop(context);
+                                onReload.call();
+                              },
+                              child: Center(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.replay_outlined,
+                                      color: _isDarkColor
+                                          ? Colors.white
+                                          : Colors.black87,
+                                      size: 18,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      'Reload',
                                       style: TextStyle(
                                         color: _isDarkColor
                                             ? Colors.white

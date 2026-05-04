@@ -205,7 +205,8 @@ class AppOperations {
       theme: 'light', // Default, or checks system brightness
       apiEndpoint: 'https://api.gudea.com', // Placeholder
       deviceLocale: Platform.localeName,
-      exchangeToken: "dummy",
+      exchangeToken:
+          "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3VhdC5ndWRlYS5nb3YuaXEvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NzczNjY3NzgsImV4cCI6MTc3NzM3MDM3OCwibmJmIjoxNzc3MzY2Nzc4LCJqdGkiOiJiOWZNbjRicnVGYW9sMFkxIiwic3ViIjoiOTYxNCIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.WLGsmGwQySXCdmb1rzw4Y44X2CjZ8CH1bMF74xQM9SA",
     );
   }
 

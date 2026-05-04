@@ -1,0 +1,16 @@
+{
+    "totalRatingCount": 2000,
+    "avgRating": 4.9,
+    "rates": [
+        {
+            "rate": 5,
+            "user": {
+                "title": "Mr",
+                "fullName": "Noaman",
+                "imageUrl": ""
+            },
+            "date": "2026-04-29",
+            "comment": "Great app!"
+        }
+    ]
+}

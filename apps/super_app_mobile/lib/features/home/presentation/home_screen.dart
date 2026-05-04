@@ -162,7 +162,7 @@ class MiniAppHost extends StatelessWidget {
           print("deltaX: $deltaX, deltaY: $deltaY");
         },
 
-        appBarBuilder: (appData, context, isScrolled) => _MiniAppHostBar(
+        appBarBuilder: (appData, context, isScrolled,onInfo) => _MiniAppHostBar(
           appData: appData,
           isScrolled: isScrolled,
           onInfo: () {
