@@ -9,4 +9,4 @@ workspace:
 
 
 dev_dependencies:
-  melos: ^7.1.1
+  melos: ^8.1.0
