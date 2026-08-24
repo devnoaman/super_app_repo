@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MiniAppEntity {
 
- String get id; String get name; String? get logoUrl; String? get description; String get version; String get requiredVersion; String get url; String get apiKey;@ColorConverter() Color get primaryColor; List<String> get requiredPermissions;
+ String get id; String get name;@JsonKey(name: 'logo_url') String? get logoUrl; String? get description; String get version;@JsonKey(name: 'required_version') String get requiredVersion; String get url;@JsonKey(name: 'api_key') String get apiKey;@JsonKey(name: 'primary_color')@ColorConverter() Color get primaryColor;@JsonKey(name: 'required_permissions') List<String> get requiredPermissions;
 /// Create a copy of MiniAppEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $MiniAppEntityCopyWith<$Res>  {
   factory $MiniAppEntityCopyWith(MiniAppEntity value, $Res Function(MiniAppEntity) _then) = _$MiniAppEntityCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String? logoUrl, String? description, String version, String requiredVersion, String url, String apiKey,@ColorConverter() Color primaryColor, List<String> requiredPermissions
+ String id, String name,@JsonKey(name: 'logo_url') String? logoUrl, String? description, String version,@JsonKey(name: 'required_version') String requiredVersion, String url,@JsonKey(name: 'api_key') String apiKey,@JsonKey(name: 'primary_color')@ColorConverter() Color primaryColor,@JsonKey(name: 'required_permissions') List<String> requiredPermissions
 });
 
 
@@ -162,7 +162,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String? logoUrl,  String? description,  String version,  String requiredVersion,  String url,  String apiKey, @ColorConverter()  Color primaryColor,  List<String> requiredPermissions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name, @JsonKey(name: 'logo_url')  String? logoUrl,  String? description,  String version, @JsonKey(name: 'required_version')  String requiredVersion,  String url, @JsonKey(name: 'api_key')  String apiKey, @JsonKey(name: 'primary_color')@ColorConverter()  Color primaryColor, @JsonKey(name: 'required_permissions')  List<String> requiredPermissions)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MiniAppEntity() when $default != null:
 return $default(_that.id,_that.name,_that.logoUrl,_that.description,_that.version,_that.requiredVersion,_that.url,_that.apiKey,_that.primaryColor,_that.requiredPermissions);case _:
@@ -183,7 +183,7 @@ return $default(_that.id,_that.name,_that.logoUrl,_that.description,_that.versio
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String? logoUrl,  String? description,  String version,  String requiredVersion,  String url,  String apiKey, @ColorConverter()  Color primaryColor,  List<String> requiredPermissions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name, @JsonKey(name: 'logo_url')  String? logoUrl,  String? description,  String version, @JsonKey(name: 'required_version')  String requiredVersion,  String url, @JsonKey(name: 'api_key')  String apiKey, @JsonKey(name: 'primary_color')@ColorConverter()  Color primaryColor, @JsonKey(name: 'required_permissions')  List<String> requiredPermissions)  $default,) {final _that = this;
 switch (_that) {
 case _MiniAppEntity():
 return $default(_that.id,_that.name,_that.logoUrl,_that.description,_that.version,_that.requiredVersion,_that.url,_that.apiKey,_that.primaryColor,_that.requiredPermissions);case _:
@@ -203,7 +203,7 @@ return $default(_that.id,_that.name,_that.logoUrl,_that.description,_that.versio
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String? logoUrl,  String? description,  String version,  String requiredVersion,  String url,  String apiKey, @ColorConverter()  Color primaryColor,  List<String> requiredPermissions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name, @JsonKey(name: 'logo_url')  String? logoUrl,  String? description,  String version, @JsonKey(name: 'required_version')  String requiredVersion,  String url, @JsonKey(name: 'api_key')  String apiKey, @JsonKey(name: 'primary_color')@ColorConverter()  Color primaryColor, @JsonKey(name: 'required_permissions')  List<String> requiredPermissions)?  $default,) {final _that = this;
 switch (_that) {
 case _MiniAppEntity() when $default != null:
 return $default(_that.id,_that.name,_that.logoUrl,_that.description,_that.version,_that.requiredVersion,_that.url,_that.apiKey,_that.primaryColor,_that.requiredPermissions);case _:
@@ -218,20 +218,20 @@ return $default(_that.id,_that.name,_that.logoUrl,_that.description,_that.versio
 @JsonSerializable()
 
 class _MiniAppEntity implements MiniAppEntity {
-  const _MiniAppEntity({required this.id, required this.name, this.logoUrl, this.description, required this.version, required this.requiredVersion, required this.url, required this.apiKey, @ColorConverter() required this.primaryColor, required final  List<String> requiredPermissions}): _requiredPermissions = requiredPermissions;
+  const _MiniAppEntity({required this.id, required this.name, @JsonKey(name: 'logo_url') this.logoUrl, this.description, required this.version, @JsonKey(name: 'required_version') required this.requiredVersion, required this.url, @JsonKey(name: 'api_key') required this.apiKey, @JsonKey(name: 'primary_color')@ColorConverter() required this.primaryColor, @JsonKey(name: 'required_permissions') required final  List<String> requiredPermissions}): _requiredPermissions = requiredPermissions;
   factory _MiniAppEntity.fromJson(Map<String, dynamic> json) => _$MiniAppEntityFromJson(json);
 
 @override final  String id;
 @override final  String name;
-@override final  String? logoUrl;
+@override@JsonKey(name: 'logo_url') final  String? logoUrl;
 @override final  String? description;
 @override final  String version;
-@override final  String requiredVersion;
+@override@JsonKey(name: 'required_version') final  String requiredVersion;
 @override final  String url;
-@override final  String apiKey;
-@override@ColorConverter() final  Color primaryColor;
+@override@JsonKey(name: 'api_key') final  String apiKey;
+@override@JsonKey(name: 'primary_color')@ColorConverter() final  Color primaryColor;
  final  List<String> _requiredPermissions;
-@override List<String> get requiredPermissions {
+@override@JsonKey(name: 'required_permissions') List<String> get requiredPermissions {
   if (_requiredPermissions is EqualUnmodifiableListView) return _requiredPermissions;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_requiredPermissions);
@@ -271,7 +271,7 @@ abstract mixin class _$MiniAppEntityCopyWith<$Res> implements $MiniAppEntityCopy
   factory _$MiniAppEntityCopyWith(_MiniAppEntity value, $Res Function(_MiniAppEntity) _then) = __$MiniAppEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String? logoUrl, String? description, String version, String requiredVersion, String url, String apiKey,@ColorConverter() Color primaryColor, List<String> requiredPermissions
+ String id, String name,@JsonKey(name: 'logo_url') String? logoUrl, String? description, String version,@JsonKey(name: 'required_version') String requiredVersion, String url,@JsonKey(name: 'api_key') String apiKey,@JsonKey(name: 'primary_color')@ColorConverter() Color primaryColor,@JsonKey(name: 'required_permissions') List<String> requiredPermissions
 });
 
 

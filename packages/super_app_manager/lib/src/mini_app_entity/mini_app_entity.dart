@@ -10,13 +10,16 @@ abstract class MiniAppEntity with _$MiniAppEntity {
   const factory MiniAppEntity({
     required String id,
     required String name,
-    String? logoUrl,
+    @JsonKey(name: 'logo_url') String? logoUrl,
     String? description,
     required String version,
-    required String requiredVersion,
+    @JsonKey(name: 'required_version') required String requiredVersion,
     required String url,
-    required String apiKey,
-    @ColorConverter() required Color primaryColor,
+    @JsonKey(name: 'api_key') required String apiKey,
+    @JsonKey(name: 'primary_color')
+    @ColorConverter()
+    required Color primaryColor,
+    @JsonKey(name: 'required_permissions')
     required List<String> requiredPermissions,
   }) = _MiniAppEntity;
 

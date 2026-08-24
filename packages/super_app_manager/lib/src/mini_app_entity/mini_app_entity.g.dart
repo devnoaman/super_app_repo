@@ -10,16 +10,16 @@ _MiniAppEntity _$MiniAppEntityFromJson(Map<String, dynamic> json) =>
     _MiniAppEntity(
       id: json['id'] as String,
       name: json['name'] as String,
-      logoUrl: json['logoUrl'] as String?,
+      logoUrl: json['logo_url'] as String?,
       description: json['description'] as String?,
       version: json['version'] as String,
-      requiredVersion: json['requiredVersion'] as String,
+      requiredVersion: json['required_version'] as String,
       url: json['url'] as String,
-      apiKey: json['apiKey'] as String,
+      apiKey: json['api_key'] as String,
       primaryColor: const ColorConverter().fromJson(
-        json['primaryColor'] as String,
+        json['primary_color'] as String,
       ),
-      requiredPermissions: (json['requiredPermissions'] as List<dynamic>)
+      requiredPermissions: (json['required_permissions'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
     );
@@ -28,12 +28,12 @@ Map<String, dynamic> _$MiniAppEntityToJson(_MiniAppEntity instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'logoUrl': instance.logoUrl,
+      'logo_url': instance.logoUrl,
       'description': instance.description,
       'version': instance.version,
-      'requiredVersion': instance.requiredVersion,
+      'required_version': instance.requiredVersion,
       'url': instance.url,
-      'apiKey': instance.apiKey,
-      'primaryColor': const ColorConverter().toJson(instance.primaryColor),
-      'requiredPermissions': instance.requiredPermissions,
+      'api_key': instance.apiKey,
+      'primary_color': const ColorConverter().toJson(instance.primaryColor),
+      'required_permissions': instance.requiredPermissions,
     };
