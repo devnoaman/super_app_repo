@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MiniAppEntity {
 
- String get id; String get name; String get logoUrl; String get description; String get version; String get requiredVersion; String get url; String get apiKey;@ColorConverter() Color get primaryColor; List<String> get requiredPermissions;
+ String get id; String get name; String? get logoUrl; String? get description; String get version; String get requiredVersion; String get url; String get apiKey;@ColorConverter() Color get primaryColor; List<String> get requiredPermissions;
 /// Create a copy of MiniAppEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $MiniAppEntityCopyWith<$Res>  {
   factory $MiniAppEntityCopyWith(MiniAppEntity value, $Res Function(MiniAppEntity) _then) = _$MiniAppEntityCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String logoUrl, String description, String version, String requiredVersion, String url, String apiKey,@ColorConverter() Color primaryColor, List<String> requiredPermissions
+ String id, String name, String? logoUrl, String? description, String version, String requiredVersion, String url, String apiKey,@ColorConverter() Color primaryColor, List<String> requiredPermissions
 });
 
 
@@ -65,13 +65,13 @@ class _$MiniAppEntityCopyWithImpl<$Res>
 
 /// Create a copy of MiniAppEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? logoUrl = null,Object? description = null,Object? version = null,Object? requiredVersion = null,Object? url = null,Object? apiKey = null,Object? primaryColor = null,Object? requiredPermissions = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? logoUrl = freezed,Object? description = freezed,Object? version = null,Object? requiredVersion = null,Object? url = null,Object? apiKey = null,Object? primaryColor = null,Object? requiredPermissions = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,logoUrl: null == logoUrl ? _self.logoUrl : logoUrl // ignore: cast_nullable_to_non_nullable
-as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as String,logoUrl: freezed == logoUrl ? _self.logoUrl : logoUrl // ignore: cast_nullable_to_non_nullable
+as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as String,requiredVersion: null == requiredVersion ? _self.requiredVersion : requiredVersion // ignore: cast_nullable_to_non_nullable
 as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String,apiKey: null == apiKey ? _self.apiKey : apiKey // ignore: cast_nullable_to_non_nullable
@@ -162,7 +162,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String logoUrl,  String description,  String version,  String requiredVersion,  String url,  String apiKey, @ColorConverter()  Color primaryColor,  List<String> requiredPermissions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String? logoUrl,  String? description,  String version,  String requiredVersion,  String url,  String apiKey, @ColorConverter()  Color primaryColor,  List<String> requiredPermissions)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MiniAppEntity() when $default != null:
 return $default(_that.id,_that.name,_that.logoUrl,_that.description,_that.version,_that.requiredVersion,_that.url,_that.apiKey,_that.primaryColor,_that.requiredPermissions);case _:
@@ -183,7 +183,7 @@ return $default(_that.id,_that.name,_that.logoUrl,_that.description,_that.versio
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String logoUrl,  String description,  String version,  String requiredVersion,  String url,  String apiKey, @ColorConverter()  Color primaryColor,  List<String> requiredPermissions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String? logoUrl,  String? description,  String version,  String requiredVersion,  String url,  String apiKey, @ColorConverter()  Color primaryColor,  List<String> requiredPermissions)  $default,) {final _that = this;
 switch (_that) {
 case _MiniAppEntity():
 return $default(_that.id,_that.name,_that.logoUrl,_that.description,_that.version,_that.requiredVersion,_that.url,_that.apiKey,_that.primaryColor,_that.requiredPermissions);case _:
@@ -203,7 +203,7 @@ return $default(_that.id,_that.name,_that.logoUrl,_that.description,_that.versio
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String logoUrl,  String description,  String version,  String requiredVersion,  String url,  String apiKey, @ColorConverter()  Color primaryColor,  List<String> requiredPermissions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String? logoUrl,  String? description,  String version,  String requiredVersion,  String url,  String apiKey, @ColorConverter()  Color primaryColor,  List<String> requiredPermissions)?  $default,) {final _that = this;
 switch (_that) {
 case _MiniAppEntity() when $default != null:
 return $default(_that.id,_that.name,_that.logoUrl,_that.description,_that.version,_that.requiredVersion,_that.url,_that.apiKey,_that.primaryColor,_that.requiredPermissions);case _:
@@ -218,13 +218,13 @@ return $default(_that.id,_that.name,_that.logoUrl,_that.description,_that.versio
 @JsonSerializable()
 
 class _MiniAppEntity implements MiniAppEntity {
-  const _MiniAppEntity({required this.id, required this.name, required this.logoUrl, required this.description, required this.version, required this.requiredVersion, required this.url, required this.apiKey, @ColorConverter() required this.primaryColor, required final  List<String> requiredPermissions}): _requiredPermissions = requiredPermissions;
+  const _MiniAppEntity({required this.id, required this.name, this.logoUrl, this.description, required this.version, required this.requiredVersion, required this.url, required this.apiKey, @ColorConverter() required this.primaryColor, required final  List<String> requiredPermissions}): _requiredPermissions = requiredPermissions;
   factory _MiniAppEntity.fromJson(Map<String, dynamic> json) => _$MiniAppEntityFromJson(json);
 
 @override final  String id;
 @override final  String name;
-@override final  String logoUrl;
-@override final  String description;
+@override final  String? logoUrl;
+@override final  String? description;
 @override final  String version;
 @override final  String requiredVersion;
 @override final  String url;
@@ -271,7 +271,7 @@ abstract mixin class _$MiniAppEntityCopyWith<$Res> implements $MiniAppEntityCopy
   factory _$MiniAppEntityCopyWith(_MiniAppEntity value, $Res Function(_MiniAppEntity) _then) = __$MiniAppEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String logoUrl, String description, String version, String requiredVersion, String url, String apiKey,@ColorConverter() Color primaryColor, List<String> requiredPermissions
+ String id, String name, String? logoUrl, String? description, String version, String requiredVersion, String url, String apiKey,@ColorConverter() Color primaryColor, List<String> requiredPermissions
 });
 
 
@@ -288,13 +288,13 @@ class __$MiniAppEntityCopyWithImpl<$Res>
 
 /// Create a copy of MiniAppEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? logoUrl = null,Object? description = null,Object? version = null,Object? requiredVersion = null,Object? url = null,Object? apiKey = null,Object? primaryColor = null,Object? requiredPermissions = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? logoUrl = freezed,Object? description = freezed,Object? version = null,Object? requiredVersion = null,Object? url = null,Object? apiKey = null,Object? primaryColor = null,Object? requiredPermissions = null,}) {
   return _then(_MiniAppEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,logoUrl: null == logoUrl ? _self.logoUrl : logoUrl // ignore: cast_nullable_to_non_nullable
-as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as String,logoUrl: freezed == logoUrl ? _self.logoUrl : logoUrl // ignore: cast_nullable_to_non_nullable
+as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as String,requiredVersion: null == requiredVersion ? _self.requiredVersion : requiredVersion // ignore: cast_nullable_to_non_nullable
 as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String,apiKey: null == apiKey ? _self.apiKey : apiKey // ignore: cast_nullable_to_non_nullable

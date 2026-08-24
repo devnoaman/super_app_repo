@@ -10,8 +10,8 @@ abstract class MiniAppEntity with _$MiniAppEntity {
   const factory MiniAppEntity({
     required String id,
     required String name,
-    required String logoUrl,
-    required String description,
+    String? logoUrl,
+    String? description,
     required String version,
     required String requiredVersion,
     required String url,

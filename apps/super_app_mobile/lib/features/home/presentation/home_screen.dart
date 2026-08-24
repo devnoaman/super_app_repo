@@ -30,28 +30,38 @@ class HomeScreen extends ConsumerWidget {
                 child: ElevatedButton(
                   onPressed: () async {
                     try {
-                      final url = Uri.parse('https://uat.gudea.gov.iq/api/v1/auth/login');
+                      final url = Uri.parse(
+                        'https://uat.gudea.gov.iq/api/v1/auth/login',
+                      );
                       final request = await HttpClient().postUrl(url);
                       request.headers.contentType = ContentType.json;
-                      request.write(jsonEncode({
-                        "phone": "07903974013",
-                        "password": "123456789"
-                      }));
+                      request.write(
+                        jsonEncode({
+                          "phone": "07903974013",
+                          "password": "123456789",
+                        }),
+                      );
                       final response = await request.close();
-                      final responseBody = await response.transform(utf8.decoder).join();
+                      final responseBody = await response
+                          .transform(utf8.decoder)
+                          .join();
                       final data = jsonDecode(responseBody);
-                      
+
                       if (data['status'] == 'success') {
                         token = data['user']['token'];
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Token updated successfully!')),
+                            const SnackBar(
+                              content: Text('Token updated successfully!'),
+                            ),
                           );
                         }
                       } else {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Failed to update token.')),
+                            const SnackBar(
+                              content: Text('Failed to update token.'),
+                            ),
                           );
                         }
                       }
@@ -112,15 +122,17 @@ class MiniAppEntityCard extends StatelessWidget {
       color: miniApp.primaryColor.withOpacity(0.1),
       elevation: 0,
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: miniApp.primaryColor,
-          backgroundImage: NetworkImage(miniApp.logoUrl),
-        ),
+        leading: (miniApp.logoUrl == null)
+            ? SizedBox()
+            : CircleAvatar(
+                backgroundColor: miniApp.primaryColor,
+                backgroundImage: NetworkImage(miniApp.logoUrl ?? ''),
+              ),
         title: Text(
           miniApp.name,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        subtitle: Text(miniApp.description),
+        subtitle: Text(miniApp.description ?? ''),
         onTap: () {
           // Navigate to the host screen, passing the selected mini-app.
           Navigator.push(
@@ -162,20 +174,21 @@ class MiniAppHost extends StatelessWidget {
           print("deltaX: $deltaX, deltaY: $deltaY");
         },
 
-        appBarBuilder: (appData, context, isScrolled,onInfo) => _MiniAppHostBar(
-          appData: appData,
-          isScrolled: isScrolled,
-          onInfo: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              useSafeArea: true,
-              backgroundColor: Colors.transparent,
-              builder: (_) => _MiniAppInfoSheet(appData: appData),
-            );
-          },
-          onClose: () => Navigator.pop(context),
-        ),
+        appBarBuilder: (appData, context, isScrolled, onInfo) =>
+            _MiniAppHostBar(
+              appData: appData,
+              isScrolled: isScrolled,
+              onInfo: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (_) => _MiniAppInfoSheet(appData: appData),
+                );
+              },
+              onClose: () => Navigator.pop(context),
+            ),
 
         // unauthorizedScreenBuilder: (miniApp) {
         //   return Center(
@@ -270,22 +283,24 @@ class _MiniAppHostBar extends StatelessWidget implements PreferredSizeWidget {
                           ),
                         ],
                       ),
-                      child: ClipOval(
-                        child: Image.network(
-                          appData.logoUrl,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Center(
-                            child: Text(
-                              appData.name[0],
-                              style: TextStyle(
-                                color: accent,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
+                      child: (appData.logoUrl == null)
+                          ? SizedBox()
+                          : ClipOval(
+                              child: Image.network(
+                                appData.logoUrl ?? '',
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => Center(
+                                  child: Text(
+                                    appData.name[0],
+                                    style: TextStyle(
+                                      color: accent,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
                     ),
                     const SizedBox(width: 10),
 
@@ -484,22 +499,24 @@ class _MiniAppInfoSheet extends StatelessWidget {
                               ),
                             ],
                           ),
-                          child: ClipOval(
-                            child: Image.network(
-                              appData.logoUrl,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Center(
-                                child: Text(
-                                  appData.name[0],
-                                  style: TextStyle(
-                                    fontSize: 36,
-                                    fontWeight: FontWeight.bold,
-                                    color: accent,
+                          child: (appData.logoUrl == null)
+                              ? SizedBox()
+                              : ClipOval(
+                                  child: Image.network(
+                                    appData.logoUrl ?? '',
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => Center(
+                                      child: Text(
+                                        appData.name[0],
+                                        style: TextStyle(
+                                          fontSize: 36,
+                                          fontWeight: FontWeight.bold,
+                                          color: accent,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
                         ),
                         const SizedBox(height: 16),
                         // name
@@ -574,13 +591,16 @@ class _MiniAppInfoSheet extends StatelessWidget {
                       // about section
                       const _SectionLabel('About'),
                       const SizedBox(height: 10),
-                      Text(
-                        appData.description,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          height: 1.65,
-                          color: theme.colorScheme.onSurface.withOpacity(0.78),
+                      if (appData.description != null)
+                        Text(
+                          appData.description ?? '',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            height: 1.65,
+                            color: theme.colorScheme.onSurface.withOpacity(
+                              0.78,
+                            ),
+                          ),
                         ),
-                      ),
 
                       // permissions section
                       if (appData.requiredPermissions.isNotEmpty) ...[
@@ -803,10 +823,3 @@ class _PermissionChip extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-

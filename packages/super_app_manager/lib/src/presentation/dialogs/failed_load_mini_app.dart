@@ -585,11 +585,11 @@ class _AppInfoCard extends StatelessWidget {
               color: accent.withOpacity(0.15),
               border: Border.all(color: accent.withOpacity(0.25)),
             ),
-            child: miniApp.logoUrl.isNotEmpty
+            child: (miniApp.logoUrl != null) && miniApp.logoUrl!.isNotEmpty
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(13),
                     child: Image.network(
-                      miniApp.logoUrl,
+                      miniApp.logoUrl!,
                       fit: BoxFit.cover,
                       errorBuilder: (_, __, ___) => Icon(
                         Iconsax.element_4,
@@ -615,16 +615,17 @@ class _AppInfoCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  miniApp.description,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: isDark ? Colors.white54 : Colors.black45,
-                    height: 1.4,
+                if (miniApp.description != null)
+                  Text(
+                    miniApp.description ?? '',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: isDark ? Colors.white54 : Colors.black45,
+                      height: 1.4,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
               ],
             ),
           ),

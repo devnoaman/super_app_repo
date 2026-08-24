@@ -231,6 +231,7 @@ class _MiniAppHostScreenState extends ConsumerState<MiniAppHostScreen> {
                       // },
                       initialSettings: InAppWebViewSettings(
                         javaScriptEnabled: true,
+                        textZoom: 100,
                         cacheMode:
                             // kDebugMode
                             // ?
@@ -347,10 +348,13 @@ class AboutAppDialog extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadiusGeometry.circular(12),
 
-                  child: Image.network(miniApp.logoUrl, width: size.width * .2),
+                  child: Image.network(
+                    miniApp.logoUrl ?? '',
+                    width: size.width * .2,
+                  ),
                 ),
                 Text(miniApp.name),
-                Text(miniApp.description),
+                Text(miniApp.description ?? ''),
               ],
             ),
           ),
@@ -439,22 +443,24 @@ class _MiniAppInfoSheet extends StatelessWidget {
                               ),
                             ],
                           ),
-                          child: ClipOval(
-                            child: Image.network(
-                              appData.logoUrl,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Center(
-                                child: Text(
-                                  appData.name[0],
-                                  style: TextStyle(
-                                    fontSize: 36,
-                                    fontWeight: FontWeight.bold,
-                                    color: accent,
+                          child: (appData.logoUrl == null)
+                              ? SizedBox()
+                              : ClipOval(
+                                  child: Image.network(
+                                    appData.logoUrl ?? '',
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => Center(
+                                      child: Text(
+                                        appData.name[0],
+                                        style: TextStyle(
+                                          fontSize: 36,
+                                          fontWeight: FontWeight.bold,
+                                          color: accent,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
                         ),
                         const SizedBox(height: 16),
                         // name
@@ -529,13 +535,16 @@ class _MiniAppInfoSheet extends StatelessWidget {
                       // about section
                       const _SectionLabel('About'),
                       const SizedBox(height: 10),
-                      Text(
-                        appData.description,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          height: 1.65,
-                          color: theme.colorScheme.onSurface.withOpacity(0.78),
+                      if (appData.description != null)
+                        Text(
+                          appData.description ?? '',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            height: 1.65,
+                            color: theme.colorScheme.onSurface.withOpacity(
+                              0.78,
+                            ),
+                          ),
                         ),
-                      ),
 
                       // permissions section
                       if (appData.requiredPermissions.isNotEmpty) ...[

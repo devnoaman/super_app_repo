@@ -172,7 +172,7 @@ class _LoadingMiniAppScreenState extends State<LoadingMiniAppScreen>
                               pulseScale: _pulse.value,
                               spinValue: _spin.value,
                               size: math.min(size.width * 0.32, 130),
-                              logoUrl: widget.miniApp.logoUrl,
+                              logoUrl: widget.miniApp.logoUrl ?? '',
                             );
                           },
                         ),
@@ -592,11 +592,11 @@ class _AppInfoCard extends StatelessWidget {
               color: accent.withOpacity(0.15),
               border: Border.all(color: accent.withOpacity(0.25)),
             ),
-            child: miniApp.logoUrl.isNotEmpty
+            child: (miniApp.logoUrl != null) && miniApp.logoUrl!.isNotEmpty
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(13),
                     child: Image.network(
-                      miniApp.logoUrl,
+                      miniApp.logoUrl!,
                       fit: BoxFit.cover,
                       errorBuilder: (_, __, ___) =>
                           Icon(Iconsax.element_4, color: accent, size: 28),

@@ -10,8 +10,8 @@ _MiniAppEntity _$MiniAppEntityFromJson(Map<String, dynamic> json) =>
     _MiniAppEntity(
       id: json['id'] as String,
       name: json['name'] as String,
-      logoUrl: json['logoUrl'] as String,
-      description: json['description'] as String,
+      logoUrl: json['logoUrl'] as String?,
+      description: json['description'] as String?,
       version: json['version'] as String,
       requiredVersion: json['requiredVersion'] as String,
       url: json['url'] as String,
